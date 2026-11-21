@@ -7,5 +7,8 @@
 */
 window.APP_CONFIG = {
   supabaseUrl: 'https://utzjlaoyehzfkrxgucws.supabase.co',
-  supabaseAnonKey: 'sb_publishable_Pxu4bBwc-C7aDW1k1ZDOHA_pghsoMTO'
+  supabaseAnonKey: 'sb_publishable_Pxu4bBwc-C7aDW1k1ZDOHA_pghsoMTO',
+  // Поставь true только когда в Supabase подключена отправка писем (SMTP, см. SETUP.md):
+  // тогда появится «Забыли пароль?» и подтверждение почты кодом.
+  emailsWork: false
 };

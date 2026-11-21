@@ -5,7 +5,11 @@ const D=window.DATA, CFG=window.APP_CONFIG||{};
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const plain=h=>{const d=document.createElement('div');d.innerHTML=h;return d.textContent.replace(/\s+/g,' ').trim()};
-const store={get(k,d){try{const v=localStorage.getItem('ис:'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('ис:'+k,JSON.stringify(v))}catch(e){}}};
+const SYNCK=/^(mywords|klcheck|daycheck|rfs|kltype|klpart|builder|hideinstall|rp:.+)$/,TM='ис:_t';
+const tmap=()=>{try{return JSON.parse(localStorage.getItem(TM)||'{}')}catch(e){return {}}};
+const store={get(k,d){try{const v=localStorage.getItem('ис:'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('ис:'+k,JSON.stringify(v))}catch(e){}
+ if(SYNCK.test(k)){try{const t=tmap();t[k]=Date.now();localStorage.setItem(TM,JSON.stringify(t))}catch(e){}schedulePush()}}};
+let pushT=null;function schedulePush(){if(!USER)return;clearTimeout(pushT);pushT=setTimeout(()=>pushSync().catch(()=>{}),4000)}
 const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),1800)};
 async function copy(txt,msg){try{await navigator.clipboard.writeText(txt)}catch(e){const a=document.createElement('textarea');a.value=txt;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}toast(msg||'Скопировано')}
 const norm=s=>String(s).toLowerCase().replace(/ё/g,'е');
@@ -64,7 +68,7 @@ function genreIn(g){return genreForms(g)[2]}
 /* ===== меню, тема ===== */
 function buildMenu(cur){$('#menuList').innerHTML=`<li><a href="#/" class="${!cur?'cur':''}" style="--acc-t:var(--line-2)"><span class="menu-num">⌂</span><span>Главная<small>Отсчёт и содержание</small></span></a></li>`+
  PAGES.map(p=>`<li class="${p.cls}"><a href="#/${p.id}" class="${cur===p.id?'cur':''}"><span class="menu-num">${p.n}</span><span>${p.t}<small>${p.d}</small></span></a></li>`).join('')+
- `<li><a href="#/profil" class="${cur==='profil'?'cur':''}" style="--acc-t:var(--line-2)"><span class="menu-num">◦</span><span>Профиль и черновики<small>${CFG.supabaseUrl?'Вход по почте':'Сохранённые черновики'}</small></span></a></li>`}
+ `<li><a href="#/profil" class="${cur==='profil'?'cur':''}" style="--acc-t:var(--line-2)"><span class="menu-num">◦</span><span>Профиль и черновики<small>${CFG.supabaseUrl?'Вход и сохранение прогресса':'Сохранённые черновики'}</small></span></a></li>`}
 const drawer=$('#drawer');
 $('#menuBtn').onclick=()=>{drawer.classList.add('on');$('#menuList a.cur')?.focus()};
 drawer.addEventListener('click',e=>{if(e.target.closest('[data-close]')||e.target.closest('a'))drawer.classList.remove('on')});
@@ -539,8 +543,20 @@ function sb(){if(!CFG.supabaseUrl||!CFG.supabaseAnonKey)return Promise.resolve(n
   SB=window.supabase.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey,{auth:{flowType:'pkce',detectSessionInUrl:true,persistSession:true}});
   const {data}=await SB.auth.getSession();USER=data.session?.user||null;
   SB.auth.onAuthStateChange((ev,s)=>{USER=s?.user||null;updUser();if(ev==='SIGNED_IN'&&/[?&]code=/.test(location.search)){history.replaceState(null,'',location.pathname+'#/profil');route()}});
-  updUser();return SB})();
+  updUser();if(USER)syncNow().then(afterSync).catch(()=>{});return SB})();
  SBP.catch(()=>{SBP=null});return SBP}
+async function pushSync(){const c=await sb().catch(()=>null);if(!c||!USER)return;const t=tmap();const data={};
+ for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||!k.startsWith('ис:'))continue;const kk=k.slice(3);if(SYNCK.test(kk))data[kk]={v:localStorage.getItem(k),t:t[kk]||0}}
+ await c.from('progress').upsert({user_id:USER.id,data,updated_at:new Date().toISOString()})}
+async function syncNow(){const c=await sb().catch(()=>null);if(!c||!USER)return false;
+ const {data:rows,error}=await c.from('progress').select('data');if(error)return false;
+ const remote=(rows&&rows[0]&&rows[0].data)||{};const t=tmap();let changed=false,push=false;
+ for(const [k,o] of Object.entries(remote)){if(!SYNCK.test(k)||!o)continue;const lt=t[k]||0;if(o.t>lt){try{localStorage.setItem('ис:'+k,o.v)}catch(e){}t[k]=o.t;changed=true}else if(o.t<lt)push=true}
+ for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('ис:')&&SYNCK.test(k.slice(3))&&!remote[k.slice(3)])push=true}
+ try{localStorage.setItem(TM,JSON.stringify(t))}catch(e){}
+ if(push)await pushSync();return changed}
+function afterSync(changed){if(!changed)return;toast('Прогресс подтянут из аккаунта');const a=document.activeElement;
+ if(!/^(INPUT|TEXTAREA)$/.test((a&&a.tagName)||'')&&!/^#\/(read|konstruktor)/.test(location.hash)){route.keepScroll=true;route()}}
 function updUser(){const b=$('#userBtn');b.title=USER?'Профиль: '+USER.email:'Профиль';b.style.background=USER?'var(--args-t)':''}
 let tracked=new Set();async function track(page){try{const c=await sb();if(!c||tracked.has(page))return;tracked.add(page);await c.rpc('track_visit',{p_page:page})}catch(e){}}
 async function saveDraft(B){const d={id:B.id||('d'+Date.now()),topic:B.topic||'Без темы',text:B.text,state:B,updated:new Date().toISOString()};B.id=d.id;
@@ -550,33 +566,67 @@ async function listDrafts(){let L=store.get('drafts',[]);const c=await sb().catc
  if(c&&USER){const {data}=await c.from('drafts').select('id,topic,body,state,updated_at').order('updated_at',{ascending:false});if(data){const ids=new Set(data.map(x=>x.id));L=data.map(x=>({id:x.id,topic:x.topic,text:x.body,state:x.state,updated:x.updated_at,cloud:true})).concat(L.filter(x=>!ids.has(x.id)))}}
  return L}
 function profil(app){app.dataset.title='Профиль';
- app.innerHTML=`<section class="page-head" style="--acc-t:var(--line-2);--acc-x:var(--ink);--acc-d:var(--muted)" data-num=""><div class="eyebrow">Профиль</div><h1>Черновики и вход</h1><p>${CFG.supabaseUrl?'Войди по почте, чтобы черновики сохранялись в аккаунте и открывались с любого устройства. Регистрация не обязательна.':'Черновики из конструктора хранятся в этом браузере.'}</p></section><div class="grid g2" style="align-items:start"><div id="pa"></div><div class="card"><h2 style="margin-top:0">Мои черновики</h2><div id="pd"><p class="muted">Загрузка…</p></div></div></div>`;
+ app.innerHTML=`<section class="page-head" style="--acc-t:var(--line-2);--acc-x:var(--ink);--acc-d:var(--muted)" data-num=""><div class="eyebrow">Профиль</div><h1>Черновики и вход</h1><p>${CFG.supabaseUrl?'Создай аккаунт, чтобы прогресс (место в читалке, галочки, клише, черновики) сохранялся и открывался с любого устройства. Регистрация не обязательна.':'Черновики из конструктора хранятся в этом браузере.'}</p></section><div class="grid g2" style="align-items:start"><div id="pa"></div><div class="card"><h2 style="margin-top:0">Мои черновики</h2><div id="pd"><p class="muted">Загрузка…</p></div></div></div>`;
  const pa=$('#pa');
  const drawDrafts=()=>listDrafts().then(L=>{$('#pd').innerHTML=L.length?L.map(d=>`<div class="item" style="margin-bottom:8px"><b>${esc(d.topic)}</b><p class="small muted" style="margin:2px 0 8px">${new Date(d.updated).toLocaleString('ru-RU')} · ${countWords(d.text||'')} слов${d.cloud?' · в аккаунте':''}</p><button class="btn sm" data-open="${d.id}">Открыть в конструкторе</button> <button class="btn sm ghost" data-del="${d.id}">Удалить</button></div>`).join(''):'<p class="muted">Пока пусто. Собери сочинение в <a href="#/konstruktor">конструкторе</a> и нажми «Сохранить черновик».</p>';
   $('#pd').onclick=async e=>{const o=e.target.closest('[data-open]'),dl=e.target.closest('[data-del]');const L2=await listDrafts();
    if(o){const d=L2.find(x=>x.id===o.dataset.open);if(d&&d.state){store.set('builder',Object.assign({},d.state,{step:3,text:d.text,edited:true,id:d.id}));location.hash='#/konstruktor'}}
    if(dl&&confirm('Удалить черновик?')){store.set('drafts',store.get('drafts',[]).filter(x=>x.id!==dl.dataset.del));const c=await sb().catch(()=>null);if(c&&USER)await c.from('drafts').delete().eq('id',dl.dataset.del);drawDrafts()}}});
  drawDrafts();
- if(!CFG.supabaseUrl){pa.innerHTML=`<div class="card"><h2 style="margin-top:0">Регистрация</h2><p>Вход по почте пока не подключён. Сайт полностью работает и без него.</p><p class="small muted">Для владельца сайта: инструкция по подключению — в файле SETUP.md в репозитории.</p></div>`;return}
+ if(!CFG.supabaseUrl){pa.innerHTML=`<div class="card"><h2 style="margin-top:0">Регистрация</h2><p>Вход пока не подключён. Сайт полностью работает и без него.</p><p class="small muted">Для владельца сайта: инструкция по подключению — в файле SETUP.md в репозитории.</p></div>`;return}
  pa.innerHTML='<div class="card"><p class="muted">Подключаюсь…</p></div>';
  sb().then(async c=>{let count='';try{const {data}=await c.rpc('users_count');if(data!=null)count=`<p class="small muted">С путеводителем уже ${data} ${plural(data,'человек','человека','человек')}.</p>`}catch(e){}
-  if(USER){pa.innerHTML=`<div class="card login-box"><h2 style="margin-top:0">Вход выполнен</h2><p><b>${esc(USER.email)}</b></p>${count}<button class="btn" id="lo">Выйти</button></div>`;$('#lo').onclick=async()=>{await c.auth.signOut();profil(app)};return}
-  const errRu=er=>/rate limit|too many|429|after \d+ seconds/i.test((er.message||'')+(er.status||''))?'Слишком много запросов. Подожди минуту (а если уже было несколько попыток — до часа) и попробуй снова.':/invalid|expired|token/i.test(er.message||'')?'Код не подошёл или устарел. Проверь цифры или запроси новый.':'Ошибка: '+er.message;
-  const stepEmail=(em0='')=>{pa.innerHTML=`<div class="card login-box"><h2 style="margin-top:0">Вход по почте</h2><p class="small">Пароль не нужен: пришлём на почту код (и ссылку) для входа. Мы не видим, что ты делаешь на сайте, — только сам факт регистрации.</p>${count}
-  <form id="lf"><div class="field"><label for="le">Почта</label><input id="le" type="email" required placeholder="name@gmail.com" autocomplete="email" value="${esc(em0)}"></div><button class="btn primary" type="submit">Получить код</button></form><p class="small" id="lm" style="margin-top:10px"></p></div>`;
-   $('#lf').onsubmit=async e=>{e.preventDefault();const em=$('#le').value.trim();$('#lm').innerHTML='<span class="spin"></span> Отправляю…';
-    const {error}=await c.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin+location.pathname}});
-    if(error){$('#lm').textContent=errRu(error);return}stepCode(em)}};
-  const stepCode=em=>{pa.innerHTML=`<div class="card login-box"><h2 style="margin-top:0">Введи код из письма</h2><p class="small">Мы отправили письмо на <b>${esc(em)}</b>. Открой его и введи код. Если пришла только ссылка — просто нажми на неё. Письмо может идти до пары минут; загляни в «Спам» и «Промоакции».</p>
-  <form id="cf"><div class="field"><label for="cc">Код из письма</label><input id="cc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required placeholder="123456" style="letter-spacing:.2em;font-size:20px"></div><button class="btn primary" type="submit">Войти</button></form><p class="small" id="cm" style="margin-top:10px"></p>
-  <p class="small"><button class="btn sm ghost" id="cr" disabled>Отправить ещё раз</button> <button class="btn sm ghost" id="cb">Другая почта</button></p></div>`;
-   let left=60;const cr=$('#cr');const tick=()=>{if(!cr.isConnected)return;cr.textContent=left>0?`Отправить ещё раз (${left})`:'Отправить ещё раз';cr.disabled=left>0;if(left-->0)setTimeout(tick,1000)};tick();
-   $('#cb').onclick=()=>stepEmail(em);
-   cr.onclick=async()=>{cr.disabled=true;left=60;tick();$('#cm').innerHTML='<span class="spin"></span> Отправляю…';const {error}=await c.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin+location.pathname}});$('#cm').textContent=error?errRu(error):'Отправили ещё раз.'};
-   $('#cf').onsubmit=async e=>{e.preventDefault();const t=$('#cc').value.replace(/\s/g,'');$('#cm').innerHTML='<span class="spin"></span> Проверяю…';
-    const {error}=await c.auth.verifyOtp({email:em,token:t,type:'email'});
-    if(error){$('#cm').textContent=errRu(error);return}USER=(await c.auth.getUser()).data.user;updUser();profil(app)}};
-  stepEmail()})
+  const spin='<span class="spin"></span> ';
+  if(USER){pa.innerHTML=`<div class="card login-box"><h2 style="margin-top:0">Вход выполнен</h2><p><b>${esc(USER.email)}</b></p>${count}<p class="small muted">Место в читалке, галочки в чек-листах, клише, черновик конструктора и сохранённые черновики теперь хранятся в аккаунте и открываются на любом устройстве.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="sn">Синхронизировать сейчас</button><button class="btn ghost" id="lo">Выйти</button></div><p class="small" id="sm"></p></div>`;
+   $('#lo').onclick=async()=>{await c.auth.signOut();USER=null;updUser();profil(app)};
+   $('#sn').onclick=async()=>{$('#sm').innerHTML=spin+'Синхронизирую…';try{await pushSync();const ch=await syncNow();$('#sm').textContent=ch?'Подтянули данные с другого устройства.':'Всё сохранено.'}catch(e){$('#sm').textContent='Не получилось: '+e.message}};return}
+  const errRu=er=>{const m=(er.message||'')+' '+(er.code||'');
+   if(/Invalid login/i.test(m))return 'Неверная почта или пароль.';
+   if(/already registered|already been registered|user_already_exists/i.test(m))return 'Эта почта уже зарегистрирована. Войди с паролем'+(CFG.emailsWork?' или восстанови его.':'.');
+   if(/rate limit|too many|429|after \d+ seconds/i.test(m))return 'Слишком много попыток. Подожди минуту и попробуй снова.';
+   if(/weak|least \d+ char|password should/i.test(m))return 'Пароль слишком простой: нужно не меньше 8 символов.';
+   if(/valid email|invalid.*email|email_address_invalid/i.test(m))return 'Проверь адрес почты.';
+   if(/expired|otp|token/i.test(m))return 'Код не подошёл или устарел. Проверь цифры или запроси новый.';
+   return 'Ошибка: '+er.message};
+  const done=async msg=>{const r=await c.auth.getUser();USER=r.data.user;updUser();try{await syncNow()}catch(e){}toast(msg);profil(app)};
+  const card=h=>{pa.innerHTML=`<div class="card login-box">${h}</div>`};
+  const timer=(btn)=>{let left=60;const tick=()=>{if(!btn.isConnected)return;btn.textContent=left>0?`Отправить ещё раз (${left})`:'Отправить ещё раз';btn.disabled=left>0;if(left-->0)setTimeout(tick,1000)};tick();return ()=>{left=60;tick()}};
+  function codeStep(em,type){const rec=type==='recovery';
+   card(`<h2 style="margin-top:0">Введи код из письма</h2><p class="small">Мы отправили письмо на <b>${esc(em)}</b>. Введи код из него${rec?' и придумай новый пароль':''}. Письмо может идти пару минут; загляни в «Спам» и «Промоакции».</p>
+   <form id="cf"><div class="field"><label for="cc">Код из письма</label><input id="cc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required placeholder="123456" style="letter-spacing:.2em;font-size:20px"></div>
+   ${rec?'<div class="field"><label for="np">Новый пароль</label><input id="np" type="password" minlength="8" required autocomplete="new-password" placeholder="не меньше 8 символов"></div>':''}
+   <button class="btn primary" type="submit">${rec?'Сохранить пароль и войти':'Подтвердить'}</button></form><p class="small" id="cm" style="margin-top:10px"></p>
+   <p class="small"><button class="btn sm ghost" id="cr" disabled>Отправить ещё раз</button> <button class="btn sm ghost" id="cb">Назад</button></p>`);
+   const again=timer($('#cr'));$('#cb').onclick=()=>form('login',em);
+   $('#cr').onclick=async()=>{again();$('#cm').innerHTML=spin+'Отправляю…';const {error}=rec?await c.auth.resetPasswordForEmail(em):await c.auth.resend({type:'signup',email:em});$('#cm').textContent=error?errRu(error):'Отправили ещё раз.'};
+   $('#cf').onsubmit=async e=>{e.preventDefault();$('#cm').innerHTML=spin+'Проверяю…';
+    const {error}=await c.auth.verifyOtp({email:em,token:$('#cc').value.replace(/\s/g,''),type});
+    if(error){$('#cm').textContent=errRu(error);return}
+    if(rec){const r=await c.auth.updateUser({password:$('#np').value});if(r.error){$('#cm').textContent=errRu(r.error);return}}
+    done(rec?'Пароль изменён':'Почта подтверждена')}}
+  function forgot(em0=''){card(`<h2 style="margin-top:0">Восстановление пароля</h2><p class="small">Введи почту — пришлём код, по которому можно придумать новый пароль.</p>
+   <form id="ff"><div class="field"><label for="fe">Почта</label><input id="fe" type="email" required autocomplete="email" value="${esc(em0)}"></div><button class="btn primary" type="submit">Прислать код</button> <button class="btn ghost" type="button" id="fb">Назад</button></form><p class="small" id="fm" style="margin-top:10px"></p>`);
+   $('#fb').onclick=()=>form('login',$('#fe').value);
+   $('#ff').onsubmit=async e=>{e.preventDefault();const em=$('#fe').value.trim();$('#fm').innerHTML=spin+'Отправляю…';const {error}=await c.auth.resetPasswordForEmail(em);if(error){$('#fm').textContent=errRu(error);return}codeStep(em,'recovery')}}
+  function form(m,em0=''){const reg=m==='reg';
+   card(`<div class="seg" style="margin-bottom:14px"><button data-t="login" aria-pressed="${!reg}">Войти</button><button data-t="reg" aria-pressed="${reg}">Регистрация</button></div>
+   <p class="small">Мы не видим, что ты делаешь на сайте, — только сам факт регистрации. Аккаунт нужен, чтобы прогресс (место в читалке, галочки, клише, черновики) сохранялся и открывался с любого устройства.</p>${count}
+   <form id="af"><div class="field"><label for="ae">Почта</label><input id="ae" type="email" required autocomplete="email" value="${esc(em0)}" placeholder="name@gmail.com"></div>
+   <div class="field"><label for="ap">Пароль</label><input id="ap" type="password" required minlength="8" autocomplete="${reg?'new-password':'current-password'}" placeholder="не меньше 8 символов"></div>
+   <button class="btn primary" type="submit">${reg?'Создать аккаунт':'Войти'}</button></form><p class="small" id="am" style="margin-top:10px"></p>
+   ${!reg&&CFG.emailsWork?'<p class="small"><button class="btn sm ghost" id="fg">Забыли пароль?</button></p>':''}`);
+   pa.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>form(b.dataset.t,$('#ae').value));
+   const fg=$('#fg');if(fg)fg.onclick=()=>forgot($('#ae').value);
+   $('#af').onsubmit=async e=>{e.preventDefault();const em=$('#ae').value.trim(),pw=$('#ap').value;$('#am').innerHTML=spin+(reg?'Создаю аккаунт…':'Проверяю…');
+    if(reg){const {data,error}=await c.auth.signUp({email:em,password:pw,options:{emailRedirectTo:location.origin+location.pathname}});
+     if(error){$('#am').textContent=errRu(error);return}
+     if(data.session)return done('Аккаунт создан');
+     if(data.user&&data.user.identities&&!data.user.identities.length){$('#am').textContent=errRu({message:'already registered'});return}
+     return codeStep(em,'signup')}
+    const {error}=await c.auth.signInWithPassword({email:em,password:pw});
+    if(error){if(/not confirmed/i.test(error.message)){await c.auth.resend({type:'signup',email:em});return codeStep(em,'signup')}$('#am').textContent=errRu(error);return}
+    done('Вход выполнен')}}
+  form('login')})
  .catch(()=>pa.innerHTML='<div class="card"><p>Не удалось подключиться к серверу входа. Черновики всё равно сохраняются в браузере.</p></div>')}
 
 /* ===== подвал и запуск ===== */

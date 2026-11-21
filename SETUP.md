@@ -49,6 +49,16 @@ returns void language sql security definer set search_path = public as $$
   on conflict (day, page) do update set n = visits.n + 1;
 $$;
 
+-- прогресс: место в читалке, галочки, клише, черновик конструктора
+create table if not exists public.progress (
+  user_id uuid primary key default auth.uid() references auth.users on delete cascade,
+  data jsonb not null default '{}',
+  updated_at timestamptz default now()
+);
+alter table public.progress enable row level security;
+create policy "own progress" on public.progress
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
 -- сколько человек зарегистрировалось (показывается на странице профиля)
 create or replace function public.users_count()
 returns integer language sql security definer set search_path = public as $$
@@ -74,21 +84,31 @@ window.APP_CONFIG = {
 Публичный ключ можно хранить в репозитории: данные защищены правилами доступа из SQL выше.
 Никогда не вставляй сюда `service_role` или `secret`.
 
-### Вход по коду: поправь шаблоны писем
+### Как человек входит
 
-По умолчанию Supabase шлёт в письме только ссылку. Сайт умеет входить и по **коду**
-(это надёжнее: код работает, даже если ссылка открылась в другом браузере или в приложении
-на экране «Домой»). Чтобы в письме был код:
+Почта + пароль (не меньше 8 символов). Аккаунт создаётся сразу, письма не нужны.
+Чтобы это работало без писем, в Supabase выключи подтверждение почты:
+**Authentication → Sign In / Providers → Email** (раскрой блок Email, прокрути вниз) →
+выключи **Confirm email** → Save.
 
-1. **Authentication → Emails → Templates** (в старом интерфейсе: Authentication → Email Templates).
-2. Открой шаблоны **Magic Link** и **Confirm signup** (новым пользователям уходит именно второй).
-3. В каждом замени текст письма на такой и сохрани:
+### Подтверждение почты кодом и восстановление пароля (когда подключишь SMTP)
+
+Для писем с кодом нужен свой SMTP (см. ниже). Когда он подключён:
+
+1. **Authentication → Emails → Templates**: в шаблонах **Confirm signup**, **Reset password**
+   (и **Magic link**) замени текст на такой (вкладка Source):
 
 ```html
-<h2>Вход в путеводитель по итоговому сочинению</h2>
+<h2>Путеводитель по итоговому сочинению</h2>
 <p>Твой код: <b>{{ .Token }}</b></p>
-<p>Или войди по ссылке: <a href="{{ .ConfirmationURL }}">войти</a></p>
+<p>Или по ссылке: <a href="{{ .ConfirmationURL }}">продолжить</a></p>
 ```
+
+2. Включи **Confirm email** (Authentication → Sign In / Providers → Email).
+3. В `config.js` поставь `emailsWork: true` — появится «Забыли пароль?».
+
+Сайт сам понимает, нужно ли подтверждение: если оно включено, после регистрации
+человек вводит код из письма.
 
 ### Если письма не приходят
 
