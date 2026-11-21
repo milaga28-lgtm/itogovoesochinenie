@@ -6,6 +6,6 @@
   Пока поля пустые, сайт работает без регистрации: черновики хранятся в браузере.
 */
 window.APP_CONFIG = {
-  supabaseUrl: '',
-  supabaseAnonKey: ''
+  supabaseUrl: 'https://utzjlaoyehzfkrxgucws.supabase.co',
+  supabaseAnonKey: 'sb_publishable_Pxu4bBwc-C7aDW1k1ZDOHA_pghsoMTO'
 };
