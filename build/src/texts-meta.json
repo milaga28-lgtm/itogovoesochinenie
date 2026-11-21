@@ -1,0 +1,909 @@
+{
+ "allei": {
+  "key": "allei",
+  "src": "https://ilibrary.ru/text/1021/p.1/index.html",
+  "chars": 8013,
+  "a": "И.А. Бунин",
+  "t": "Тёмные аллеи",
+  "g": "рассказ, 1938 (из одноимённого цикла)",
+  "subs": [
+   "1.2",
+   "1.3"
+  ]
+ },
+ "antonovskie-yabloki": {
+  "key": "antonovskie",
+  "src": "https://ilibrary.ru/text/95/p.1/index.html",
+  "chars": 27931,
+  "a": "И.А. Бунин",
+  "t": "Антоновские яблоки",
+  "g": "",
+  "subs": [
+   "3.1"
+  ]
+ },
+ "apteka": {
+  "key": "apteka",
+  "src": "https://ilibrary.ru/text/4157/p.1/index.html",
+  "chars": 7242,
+  "a": "А.П. Чехов",
+  "t": "В аптеке",
+  "g": "рассказ, 1885",
+  "subs": [
+   "1.2",
+   "2.2",
+   "1.1"
+  ]
+ },
+ "asya": {
+  "key": "asya",
+  "src": "https://ilibrary.ru/text/1097/p.1/index.html",
+  "chars": 85688,
+  "a": "И.С. Тургенев",
+  "t": "Ася",
+  "g": "",
+  "subs": [
+   "1.4"
+  ]
+ },
+ "bednye-lyudi": {
+  "key": "bednye",
+  "src": "https://ilibrary.ru/text/17/p.1/index.html",
+  "chars": 248488,
+  "a": "Ф.М. Достоевский",
+  "t": "Бедные люди",
+  "g": "",
+  "subs": [
+   "3.3"
+  ]
+ },
+ "biryuk": {
+  "key": "biryuk",
+  "src": "https://ilibrary.ru/text/1204/p.1/index.html",
+  "chars": 13551,
+  "a": "И.С. Тургенев",
+  "t": "Бирюк",
+  "g": "рассказ из цикла «Записки охотника», 1848",
+  "subs": [
+   "2.2",
+   "1.1",
+   "1.2",
+   "3.1"
+  ]
+ },
+ "chelkash": {
+  "key": "chelkash",
+  "src": "https://ilibrary.ru/text/487/p.1/index.html",
+  "chars": 59231,
+  "a": "М. Горький",
+  "t": "Челкаш",
+  "g": "",
+  "subs": [
+   "1.2"
+  ]
+ },
+ "chistyy-ponedelnik": {
+  "key": "chisty",
+  "src": "https://ilibrary.ru/text/1019/p.1/index.html",
+  "chars": 24992,
+  "a": "И.А. Бунин",
+  "t": "Чистый понедельник",
+  "g": "",
+  "subs": [
+   "1.3",
+   "1.2"
+  ]
+ },
+ "neizvestnyy-cvetok": {
+  "key": "cvetok",
+  "src": "https://ilibrary.ru/text/1197/p.1/index.html",
+  "chars": 6561,
+  "a": "А.П. Платонов",
+  "t": "Неизвестный цветок",
+  "g": "",
+  "subs": [
+   "1.1"
+  ]
+ },
+ "doktor": {
+  "key": "doktor",
+  "src": "https://ilibrary.ru/text/1759/p.1/index.html",
+  "chars": 16492,
+  "a": "А.И. Куприн",
+  "t": "Чудесный доктор",
+  "g": "рассказ, 1897 (основан на реальном случае)",
+  "subs": [
+   "1.2",
+   "1.1",
+   "2.2",
+   "1.3",
+   "1.4",
+   "2.1",
+   "2.3"
+  ]
+ },
+ "v-durnom-obschestve": {
+  "key": "durnoe",
+  "src": "https://ilibrary.ru/text/1764/p.1/index.html",
+  "chars": 116044,
+  "a": "В.Г. Короленко",
+  "t": "В дурном обществе",
+  "g": "",
+  "subs": [
+   "2.2"
+  ]
+ },
+ "dushechka": {
+  "key": "dushechka",
+  "src": "https://ilibrary.ru/text/995/p.1/index.html",
+  "chars": 23390,
+  "a": "А.П. Чехов",
+  "t": "Душечка",
+  "g": "",
+  "subs": [
+   "1.1",
+   "1.2",
+   "1.3",
+   "2.1",
+   "2.2"
+  ]
+ },
+ "futlyar": {
+  "key": "futlyar",
+  "src": "https://ilibrary.ru/text/438/p.1/index.html",
+  "chars": 24750,
+  "a": "А.П. Чехов",
+  "t": "Человек в футляре",
+  "g": "рассказ, 1898",
+  "subs": [
+   "1.4",
+   "1.1",
+   "2.2",
+   "1.2",
+   "1.3",
+   "2.1",
+   "2.3"
+  ]
+ },
+ "geroy-nashego-vremeni": {
+  "key": "geroy",
+  "src": "https://ilibrary.ru/text/12/p.1/index.html",
+  "chars": 263786,
+  "a": "М.Ю. Лермонтов",
+  "t": "Герой нашего времени",
+  "g": "",
+  "subs": [
+   "1.2",
+   "1.1",
+   "2.3",
+   "2.2",
+   "1.3"
+  ]
+ },
+ "gore-ot-uma": {
+  "key": "gore",
+  "src": "https://ilibrary.ru/text/5/p.1/index.html",
+  "chars": 61403,
+  "a": "А.С. Грибоедов",
+  "t": "Горе от ума",
+  "g": "",
+  "subs": [
+   "1.1",
+   "2.2",
+   "1.3"
+  ]
+ },
+ "gorlo": {
+  "key": "gorlo",
+  "src": "https://ilibrary.ru/text/4562/p.1/index.html",
+  "chars": 15497,
+  "a": "М.А. Булгаков",
+  "t": "Стальное горло",
+  "g": "рассказ из цикла «Записки юного врача», 1925",
+  "subs": [
+   "3.2",
+   "1.1"
+  ]
+ },
+ "gospodin": {
+  "key": "gospodin",
+  "src": "https://ilibrary.ru/text/1016/p.1/index.html",
+  "chars": 42172,
+  "a": "И.А. Бунин",
+  "t": "Господин из Сан-Франциско",
+  "g": "рассказ, 1915",
+  "subs": [
+   "1.1",
+   "1.3",
+   "2.2",
+   "1.2",
+   "2.3"
+  ]
+ },
+ "granat": {
+  "key": "granat",
+  "src": "https://ilibrary.ru/text/1022/p.1/index.html",
+  "chars": 91273,
+  "a": "А.И. Куприн",
+  "t": "Гранатовый браслет",
+  "g": "повесть, 1911",
+  "subs": [
+   "1.2",
+   "1.1",
+   "3.3",
+   "1.3",
+   "1.4",
+   "2.1",
+   "2.2",
+   "2.3"
+  ]
+ },
+ "groza": {
+  "key": "groza",
+  "src": "https://ilibrary.ru/text/994/p.1/index.html",
+  "chars": 87478,
+  "a": "А.Н. Островский",
+  "t": "Гроза",
+  "g": "",
+  "subs": [
+   "1.4",
+   "1.1",
+   "2.2"
+  ]
+ },
+ "ionych": {
+  "key": "ionych",
+  "src": "https://ilibrary.ru/text/437/p.1/index.html",
+  "chars": 33499,
+  "a": "А.П. Чехов",
+  "t": "Ионыч",
+  "g": "рассказ, 1898",
+  "subs": [
+   "1.1",
+   "1.3",
+   "2.2",
+   "1.2",
+   "1.4",
+   "2.1",
+   "3.1"
+  ]
+ },
+ "izergil": {
+  "key": "izergil",
+  "src": "https://ilibrary.ru/text/486/p.1/index.html",
+  "chars": 40127,
+  "a": "М. Горький",
+  "t": "Старуха Изергиль (легенды о Ларре и Данко)",
+  "g": "рассказ, 1895",
+  "subs": [
+   "2.2",
+   "1.2",
+   "1.4",
+   "1.3",
+   "2.1",
+   "3.3"
+  ]
+ },
+ "puteshestvie-iz-peterburga-v-moskvu": {
+  "key": "kakoy_radishchev",
+  "src": "https://ilibrary.ru/text/1850/p.1/index.html",
+  "chars": 341950,
+  "a": "А.Н. Радищев",
+  "t": "Путешествие из Петербурга в Москву",
+  "g": "",
+  "subs": [
+   "1.3"
+  ]
+ },
+ "kalash": {
+  "key": "kalash",
+  "src": "https://ilibrary.ru/text/1151/p.1/index.html",
+  "chars": 16081,
+  "a": "М.Ю. Лермонтов",
+  "t": "Песня про царя Ивана Васильевича, молодого опричника и удалого купца Калашникова",
+  "g": "поэма в стиле народной былины, 1837",
+  "subs": [
+   "2.1",
+   "1.1",
+   "2.2"
+  ]
+ },
+ "kapdoch": {
+  "key": "kapdoch",
+  "src": "https://ilibrary.ru/text/107/p.1/index.html",
+  "chars": 210806,
+  "a": "А.С. Пушкин",
+  "t": "Капитанская дочка",
+  "g": "исторический роман (повесть), 1836",
+  "subs": [
+   "1.1",
+   "1.2",
+   "2.1",
+   "2.3",
+   "1.4",
+   "1.3",
+   "2.2"
+  ]
+ },
+ "komu-na-rusi-zhit-horosho": {
+  "key": "komu",
+  "src": "https://ilibrary.ru/text/13/p.1/index.html",
+  "chars": 203589,
+  "a": "Н.А. Некрасов",
+  "t": "Кому на Руси жить хорошо?",
+  "g": "",
+  "subs": [
+   "1.3",
+   "2.3"
+  ]
+ },
+ "kryzhovnik": {
+  "key": "kryzhovnik",
+  "src": "https://ilibrary.ru/text/460/p.1/index.html",
+  "chars": 19689,
+  "a": "А.П. Чехов",
+  "t": "Крыжовник",
+  "g": "рассказ, 1898 («маленькая трилогия»)",
+  "subs": [
+   "1.1",
+   "1.3",
+   "1.2",
+   "1.4",
+   "2.2",
+   "3.1",
+   "2.3"
+  ]
+ },
+ "kusaka": {
+  "key": "kusaka",
+  "src": "https://ilibrary.ru/text/2158/p.1/index.html",
+  "chars": 13453,
+  "a": "Л.Н. Андреев",
+  "t": "Кусака",
+  "g": "рассказ, 1901",
+  "subs": [
+   "3.1",
+   "1.2"
+  ]
+ },
+ "kust": {
+  "key": "kust",
+  "src": "https://ilibrary.ru/text/1848/p.1/index.html",
+  "chars": 10494,
+  "a": "А.И. Куприн",
+  "t": "Куст сирени",
+  "g": "рассказ, 1894",
+  "subs": [
+   "1.2",
+   "2.1",
+   "1.1",
+   "1.4",
+   "2.2"
+  ]
+ },
+ "lampa": {
+  "key": "lampa",
+  "src": "https://ilibrary.ru/text/4554/p.1/index.html",
+  "chars": 8672,
+  "a": "А.С. Грин",
+  "t": "Зелёная лампа",
+  "g": "рассказ, 1930",
+  "subs": [
+   "1.3",
+   "1.1",
+   "2.2",
+   "1.2",
+   "1.4"
+  ]
+ },
+ "levsha": {
+  "key": "levsha",
+  "src": "https://ilibrary.ru/text/986/p.1/index.html",
+  "chars": 55987,
+  "a": "Н.С. Лесков",
+  "t": "Левша (Сказ о тульском косом Левше и о стальной блохе)",
+  "g": "сказ, 1881",
+  "subs": [
+   "2.3",
+   "2.2",
+   "3.3",
+   "1.1"
+  ]
+ },
+ "liza": {
+  "key": "liza",
+  "src": "https://ilibrary.ru/text/1087/p.1/index.html",
+  "chars": 31686,
+  "a": "Н.М. Карамзин",
+  "t": "Бедная Лиза",
+  "g": "сентиментальная повесть, 1792",
+  "subs": [
+   "1.2",
+   "2.2"
+  ]
+ },
+ "mcyri": {
+  "key": "mcyri",
+  "src": "https://ilibrary.ru/text/991/p.1/index.html",
+  "chars": 19609,
+  "a": "М.Ю. Лермонтов",
+  "t": "Мцыри",
+  "g": "",
+  "subs": [
+   "1.4"
+  ]
+ },
+ "mertvye-dushi": {
+  "key": "mertvye",
+  "src": "https://ilibrary.ru/text/78/p.1/index.html",
+  "chars": 496566,
+  "a": "Н.В. Гоголь",
+  "t": "Мертвые души",
+  "g": "",
+  "subs": [
+   "1.2",
+   "2.1"
+  ]
+ },
+ "mest": {
+  "key": "mest",
+  "src": "https://ilibrary.ru/text/98/p.1/index.html",
+  "chars": 7203,
+  "a": "А.П. Чехов",
+  "t": "Месть",
+  "g": "рассказ, 1886",
+  "subs": [
+   "1.2"
+  ]
+ },
+ "dom-s-mezoninom": {
+  "key": "mezonin",
+  "src": "https://ilibrary.ru/text/1050/p.1/index.html",
+  "chars": 34476,
+  "a": "А.П. Чехов",
+  "t": "Дом с мезонином",
+  "g": "",
+  "subs": [
+   "1.1",
+   "1.2",
+   "1.4",
+   "2.2",
+   "2.3"
+  ]
+ },
+ "mocart": {
+  "key": "mocart",
+  "src": "https://ilibrary.ru/text/467/p.1/index.html",
+  "chars": 7815,
+  "a": "А.С. Пушкин",
+  "t": "Моцарт и Сальери",
+  "g": "маленькая трагедия, 1830",
+  "subs": [
+   "3.3",
+   "1.2"
+  ]
+ },
+ "mumu": {
+  "key": "mumu",
+  "src": "https://ilibrary.ru/text/1250/p.1/index.html",
+  "chars": 53343,
+  "a": "И.С. Тургенев",
+  "t": "Муму",
+  "g": "",
+  "subs": [
+   "2.3"
+  ]
+ },
+ "my": {
+  "key": "my",
+  "src": "https://ilibrary.ru/text/1494/p.1/index.html",
+  "chars": 288530,
+  "a": "Е. Замятин",
+  "t": "Мы",
+  "g": "",
+  "subs": [
+   "1.1",
+   "1.2",
+   "1.3",
+   "1.4",
+   "2.1",
+   "2.2",
+   "2.3",
+   "3.2"
+  ]
+ },
+ "na-dne": {
+  "key": "nadne",
+  "src": "https://ilibrary.ru/text/505/p.1/index.html",
+  "chars": 96795,
+  "a": "М. Горький",
+  "t": "На дне",
+  "g": "",
+  "subs": [
+   "1.1",
+   "1.2",
+   "1.3",
+   "1.4",
+   "2.1",
+   "2.2",
+   "2.3"
+  ]
+ },
+ "nedorosl": {
+  "key": "nedorosl",
+  "src": "https://ilibrary.ru/text/1098/p.1/index.html",
+  "chars": 100729,
+  "a": "Д.И. Фонвизин",
+  "t": "Недоросль",
+  "g": "комедия, 1782",
+  "subs": [
+   "2.1",
+   "2.2",
+   "1.1",
+   "3.2",
+   "2.3"
+  ]
+ },
+ "nevesta": {
+  "key": "nevesta",
+  "src": "https://ilibrary.ru/text/1184/p.1/index.html",
+  "chars": 34730,
+  "a": "А.П. Чехов",
+  "t": "Невеста",
+  "g": "рассказ, 1903",
+  "subs": [
+   "1.3",
+   "1.4"
+  ]
+ },
+ "nevskiy-prospekt": {
+  "key": "nevsky",
+  "src": "https://ilibrary.ru/text/1332/p.1/index.html",
+  "chars": 71333,
+  "a": "Н.В. Гоголь",
+  "t": "Невский проспект",
+  "g": "",
+  "subs": [
+   "2.2"
+  ]
+ },
+ "o-lyubvi": {
+  "key": "o_lyubvi",
+  "src": "https://ilibrary.ru/text/461/p.1/index.html",
+  "chars": 18174,
+  "a": "А.П. Чехов",
+  "t": "О любви",
+  "g": "",
+  "subs": [
+   "1.1",
+   "1.2",
+   "1.3",
+   "1.4"
+  ]
+ },
+ "oblomov": {
+  "key": "oblomov",
+  "src": "https://ilibrary.ru/text/475/p.1/index.html",
+  "chars": 922259,
+  "a": "И.А. Гончаров",
+  "t": "Обломов",
+  "g": "",
+  "subs": [
+   "1.1",
+   "2.1",
+   "2.2",
+   "1.3"
+  ]
+ },
+ "olesya": {
+  "key": "olesya",
+  "src": "https://ilibrary.ru/text/1180/p.1/index.html",
+  "chars": 142248,
+  "a": "А.И. Куприн",
+  "t": "Олеся",
+  "g": "повесть, 1898",
+  "subs": [
+   "1.2",
+   "3.1",
+   "1.1",
+   "2.2",
+   "1.3",
+   "1.4",
+   "2.1"
+  ]
+ },
+ "evgeniy-onegin": {
+  "key": "onegin",
+  "src": "https://ilibrary.ru/text/436/p.1/index.html",
+  "chars": 161510,
+  "a": "А.С. Пушкин",
+  "t": "Евгений Онегин",
+  "g": "",
+  "subs": [
+   "1.4",
+   "2.2",
+   "3.3",
+   "1.3"
+  ]
+ },
+ "otcy": {
+  "key": "otcy",
+  "src": "https://ilibrary.ru/text/96/p.1/index.html",
+  "chars": 355534,
+  "a": "И.С. Тургенев",
+  "t": "Отцы и дети",
+  "g": "роман, 1862",
+  "subs": [
+   "2.1",
+   "1.3",
+   "1.1",
+   "3.1",
+   "1.2",
+   "2.2",
+   "2.3",
+   "3.2",
+   "3.3"
+  ]
+ },
+ "parusa": {
+  "key": "parusa",
+  "src": "https://ilibrary.ru/text/1845/p.1/index.html",
+  "chars": 132188,
+  "a": "А.С. Грин",
+  "t": "Алые паруса",
+  "g": "повесть-феерия, 1922",
+  "subs": [
+   "1.3",
+   "1.1",
+   "2.2",
+   "1.2"
+  ]
+ },
+ "pesch": {
+  "key": "pesch",
+  "src": "https://ilibrary.ru/text/1195/p.1/index.html",
+  "chars": 12193,
+  "a": "А.П. Платонов",
+  "t": "Песчаная учительница",
+  "g": "рассказ, 1927",
+  "subs": [
+   "1.2",
+   "2.3",
+   "3.1"
+  ]
+ },
+ "poprygunya": {
+  "key": "poprygunya",
+  "src": "https://ilibrary.ru/text/706/p.1/index.html",
+  "chars": 46951,
+  "a": "А.П. Чехов",
+  "t": "Попрыгунья",
+  "g": "рассказ, 1892",
+  "subs": [
+   "1.1",
+   "1.3",
+   "2.1",
+   "1.2",
+   "1.4",
+   "2.2",
+   "2.3"
+  ]
+ },
+ "portret": {
+  "key": "portret",
+  "src": "https://ilibrary.ru/text/77/p.1/index.html",
+  "chars": 113563,
+  "a": "Н.В. Гоголь",
+  "t": "Портрет",
+  "g": "",
+  "subs": [
+   "3.3"
+  ]
+ },
+ "posle-bala": {
+  "key": "posle_bala",
+  "src": "https://ilibrary.ru/text/1005/p.1/index.html",
+  "chars": 18780,
+  "a": "Л.Н. Толстой",
+  "t": "После бала",
+  "g": "рассказ, 1903",
+  "subs": [
+   "1.2",
+   "1.3",
+   "2.2"
+  ]
+ },
+ "prestuplenie": {
+  "key": "prestuplenie",
+  "src": "https://ilibrary.ru/text/69/p.1/index.html",
+  "chars": 1073735,
+  "a": "Ф.М. Достоевский",
+  "t": "Преступление и наказание",
+  "g": "роман, 1866",
+  "subs": [
+   "1.2",
+   "1.4",
+   "1.1",
+   "1.3",
+   "2.2",
+   "2.1",
+   "2.3"
+  ]
+ },
+ "razmaznya": {
+  "key": "razmaznya",
+  "src": "https://ilibrary.ru/text/984/p.1/index.html",
+  "chars": 3016,
+  "a": "А.П. Чехов",
+  "t": "Размазня",
+  "g": "рассказ, 1883",
+  "subs": [
+   "1.1",
+   "1.4",
+   "1.2"
+  ]
+ },
+ "revizor": {
+  "key": "revizor",
+  "src": "https://ilibrary.ru/text/473/p.1/index.html",
+  "chars": 131622,
+  "a": "Н.В. Гоголь",
+  "t": "Ревизор",
+  "g": "",
+  "subs": [
+   "1.2"
+  ]
+ },
+ "shinel": {
+  "key": "shinel",
+  "src": "https://ilibrary.ru/text/980/p.1/index.html",
+  "chars": 65289,
+  "a": "Н.В. Гоголь",
+  "t": "Шинель",
+  "g": "повесть, 1842",
+  "subs": [
+   "2.2",
+   "1.2",
+   "1.1"
+  ]
+ },
+ "slepoy": {
+  "key": "slepoy",
+  "src": "https://ilibrary.ru/text/2402/p.1/index.html",
+  "chars": 238224,
+  "a": "В.Г. Короленко",
+  "t": "Слепой музыкант",
+  "g": "повесть, 1886",
+  "subs": [
+   "3.3",
+   "1.1",
+   "1.3"
+  ]
+ },
+ "stancionnyy-smotritel": {
+  "key": "smotritel",
+  "src": "https://ilibrary.ru/text/89/p.1/index.html",
+  "chars": 22039,
+  "a": "А.С. Пушкин",
+  "t": "Станционный смотритель",
+  "g": "",
+  "subs": [
+   "2.1"
+  ]
+ },
+ "spat": {
+  "key": "spat",
+  "src": "https://ilibrary.ru/text/683/p.1/index.html",
+  "chars": 9948,
+  "a": "А.П. Чехов",
+  "t": "Спать хочется",
+  "g": "рассказ, 1888",
+  "subs": [
+   "2.2",
+   "1.2"
+  ]
+ },
+ "student": {
+  "key": "student",
+  "src": "https://ilibrary.ru/text/979/p.1/index.html",
+  "chars": 7054,
+  "a": "А.П. Чехов",
+  "t": "Студент",
+  "g": "рассказ, 1894 (любимый рассказ самого Чехова)",
+  "subs": [
+   "1.3",
+   "1.1"
+  ]
+ },
+ "syp": {
+  "key": "syp",
+  "src": "https://ilibrary.ru/text/4566/p.1/index.html",
+  "chars": 24555,
+  "a": "М.А. Булгаков",
+  "t": "Звёздная сыпь",
+  "g": "рассказ из цикла «Записки юного врача», 1926",
+  "subs": [
+   "3.2",
+   "2.2"
+  ]
+ },
+ "taras-bulba": {
+  "key": "taras",
+  "src": "https://ilibrary.ru/text/1070/p.1/index.html",
+  "chars": 231440,
+  "a": "Н.В. Гоголь",
+  "t": "Тарас Бульба",
+  "g": "",
+  "subs": [
+   "1.3",
+   "2.3"
+  ]
+ },
+ "toska": {
+  "key": "toska",
+  "src": "https://ilibrary.ru/text/981/p.1/index.html",
+  "chars": 9304,
+  "a": "А.П. Чехов",
+  "t": "Тоска",
+  "g": "рассказ, 1886",
+  "subs": [
+   "1.2",
+   "2.2"
+  ]
+ },
+ "ushla": {
+  "key": "ushla",
+  "src": "https://ilibrary.ru/text/4164/p.1/index.html",
+  "chars": 2540,
+  "a": "А.П. Чехов",
+  "t": "Ушла",
+  "g": "рассказ-сценка, 1883",
+  "subs": [
+   "1.1",
+   "1.2"
+  ]
+ },
+ "vishnevyy-sad": {
+  "key": "vishnevy",
+  "src": "https://ilibrary.ru/text/472/p.1/index.html",
+  "chars": 76790,
+  "a": "А.П. Чехов",
+  "t": "Вишнёвый сад",
+  "g": "",
+  "subs": [
+   "3.1",
+   "2.3"
+  ]
+ },
+ "voyna": {
+  "key": "voyna",
+  "src": "https://ilibrary.ru/text/11/p.1/index.html",
+  "chars": 2973592,
+  "a": "Л.Н. Толстой",
+  "t": "Война и мир",
+  "g": "роман-эпопея, 1863–1869",
+  "subs": [
+   "1.3",
+   "1.1",
+   "1.2",
+   "2.1",
+   "2.3",
+   "2.2",
+   "3.1",
+   "3.3"
+  ]
+ },
+ "yushka": {
+  "key": "yushka",
+  "src": "https://ilibrary.ru/text/1192/p.1/index.html",
+  "chars": 12887,
+  "a": "А.П. Платонов",
+  "t": "Юшка",
+  "g": "рассказ, 1935",
+  "subs": [
+   "1.2",
+   "1.1",
+   "2.2"
+  ]
+ }
+}

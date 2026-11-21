@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Итоговое сочинение — путеводитель</title>
+<meta name="description" content="Бесплатный путеводитель по итоговому сочинению: критерии, клише-шаблоны, идеальные сочинения, темы и тезисы, аргументы по подразделам, тексты произведений и конструктор сочинения.">
+<meta name="theme-color" content="#F5EFE4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232B2630'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='36' font-weight='700' fill='%23F5EFE4' text-anchor='middle'%3EИ%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#/" aria-label="На главную">
+      <span class="brand-mark">И</span>
+      <span class="brand-t">Итоговое сочинение<small>путеводитель</small></span>
+    </a>
+    <a class="btn ghost icon" href="#/biblioteka" title="Произведения" aria-label="Произведения"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></a>
+    <button class="btn ghost icon" id="themeBtn" title="Дневная / ночная тема" aria-label="Сменить тему"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+    <a class="btn ghost icon" id="userBtn" href="#/profil" title="Профиль" aria-label="Профиль"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></a>
+    <button class="btn" id="menuBtn" aria-haspopup="dialog" aria-controls="drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span>Содержание</span></button>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Содержание">
+  <div class="drawer-bg" data-close></div>
+  <div class="drawer-panel">
+    <div class="drawer-head"><h2 style="margin:0">Содержание</h2><button class="btn icon ghost" data-close aria-label="Закрыть">✕</button></div>
+    <ul class="menu-list" id="menuList"></ul>
+  </div>
+</div>
+
+<main id="app" tabindex="-1"><p class="muted" style="padding:40px 0">Загрузка…</p></main>
+
+<footer><div class="in" id="footer"></div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script src="data/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
