@@ -65,6 +65,10 @@ returns integer language sql security definer set search_path = public as $$
   select count(*)::int from auth.users;
 $$;
 
+-- права для вошедших людей (в новых проектах Supabase они не выдаются сами)
+grant select, insert, update, delete on public.drafts to authenticated;
+grant select, insert, update, delete on public.progress to authenticated;
+
 grant execute on function public.track_visit(text) to anon, authenticated;
 grant execute on function public.users_count() to anon, authenticated;
 ```
