@@ -61,18 +61,47 @@ grant execute on function public.users_count() to anon, authenticated;
 
 3. **Authentication → URL Configuration**: в **Site URL** и **Redirect URLs** впиши адрес сайта,
    например `https://<твой-логин>.github.io/itogovoesochinenie/`.
-4. **Project Settings → API**: скопируй **Project URL** и **anon public** ключ и вставь их в файл
-   `config.js`:
+4. **Project Settings → API Keys** (или кнопка **Connect** вверху): скопируй **Project URL** и
+   публичный ключ (**anon public** или **Publishable key**) и вставь их в файл `config.js`:
 
 ```js
 window.APP_CONFIG = {
   supabaseUrl: 'https://xxxx.supabase.co',
-  supabaseAnonKey: 'eyJ...'
+  supabaseAnonKey: 'sb_publishable_...'
 };
 ```
 
-`anon`-ключ публичный: его можно хранить в репозитории, данные защищены правилами доступа из SQL выше.
-Никогда не вставляй сюда `service_role`-ключ.
+Публичный ключ можно хранить в репозитории: данные защищены правилами доступа из SQL выше.
+Никогда не вставляй сюда `service_role` или `secret`.
+
+### Вход по коду: поправь шаблоны писем
+
+По умолчанию Supabase шлёт в письме только ссылку. Сайт умеет входить и по **коду**
+(это надёжнее: код работает, даже если ссылка открылась в другом браузере или в приложении
+на экране «Домой»). Чтобы в письме был код:
+
+1. **Authentication → Emails → Templates** (в старом интерфейсе: Authentication → Email Templates).
+2. Открой шаблоны **Magic Link** и **Confirm signup** (новым пользователям уходит именно второй).
+3. В каждом замени текст письма на такой и сохрани:
+
+```html
+<h2>Вход в путеводитель по итоговому сочинению</h2>
+<p>Твой код: <b>{{ .Token }}</b></p>
+<p>Или войди по ссылке: <a href="{{ .ConfirmationURL }}">войти</a></p>
+```
+
+### Если письма не приходят
+
+Встроенная почта Supabase рассчитана только на проверку:
+
+- письма уходят примерно 2 раза в час на весь проект;
+- многие российские почтовые службы (mail.ru, yandex.ru) их отбрасывают;
+- Gmail часто кладёт их в «Спам» или «Промоакции».
+
+Для настоящих пользователей подключи свой SMTP: **Authentication → Emails → SMTP Settings →
+Enable custom SMTP**. Бесплатные варианты: [Brevo](https://www.brevo.com) (300 писем в день,
+достаточно подтвердить свой адрес отправителя) или [Resend](https://resend.com) (нужен свой домен).
+Смотреть, что происходит с письмами: **Logs → Auth**.
 
 ### Где смотреть статистику
 
@@ -87,6 +116,8 @@ window.APP_CONFIG = {
 | `index.html` | каркас страницы |
 | `assets/style.css` | оформление, цвета разделов, ночная тема |
 | `assets/app.js` | все разделы, конструктор, читалка, вход |
+| `assets/supabase.js` | библиотека входа (скопирована в репозиторий, чтобы не зависеть от внешних сайтов) |
+| `manifest.webmanifest`, `sw.js`, `assets/icons/` | установка на экран «Домой» и офлайн-режим |
 | `data/data.js` | произведения, тезисы, клише, сочинения (собирается скриптом) |
 | `data/bank.json` | аргументы из сборников |
 | `texts/*.json` | полные тексты классики |

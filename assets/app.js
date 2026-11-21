@@ -72,7 +72,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')drawer.classList.rem
 $('#themeBtn').onclick=()=>{const r=document.documentElement;const n=r.dataset.theme==='night'?'':'night';if(n)r.dataset.theme=n;else delete r.dataset.theme;try{localStorage.setItem('theme',n)}catch(e){}};
 
 /* ===== роутер ===== */
-const ROUTES={'':home,kriterii,razdely,start,klishe,ideal,temy,argumenty,biblioteka,konstruktor,den,profil,w:workPage,read:reader};
+const ROUTES={'':home,ustanovka,kriterii,razdely,start,klishe,ideal,temy,argumenty,biblioteka,konstruktor,den,profil,w:workPage,read:reader};
 function route(){const h=decodeURIComponent(location.hash.replace(/^#\/?/,''));const [name,...rest]=h.split('/');
  const fn=ROUTES[name]||home;const app=$('#app');app.className='';
  const pg=PG[name]||(name==='w'||name==='read'?PG.biblioteka:null);
@@ -88,6 +88,28 @@ function head(p,extra){return `<section class="page-head" data-num="${p.n}"><div
 function pager(id){const i=PAGES.findIndex(p=>p.id===id);const a=PAGES[i-1],b=PAGES[i+1];
  return `<nav class="pager" aria-label="Соседние разделы">${a?`<a href="#/${a.id}" class="${a.cls}"><small>← ${a.n}</small>${a.t}</a>`:'<span></span>'}${b?`<a href="#/${b.id}" class="next ${b.cls}"><small>${b.n} →</small>${b.t}</a>`:`<a href="#/" class="next"><small>→</small>На главную</a>`}</nav>`}
 
+/* ===== установка как приложения ===== */
+let deferredInstall=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$$('[data-install]').forEach(b=>b.hidden=false)});
+window.addEventListener('appinstalled',()=>{deferredInstall=null;toast('Готово — ищи иконку на экране');$$('.install').forEach(x=>x.hidden=true)});
+const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const isAndroid=()=>/android/i.test(navigator.userAgent);
+function installSteps(all){const ios=['Открой сайт в <b>Safari</b>.','Нажми кнопку <b>«Поделиться»</b> — квадрат со стрелкой вверх (внизу экрана или в меню «···»).','Пролистай список вниз и нажми <b>«На экран „Домой“»</b>.','Нажми <b>«Добавить»</b> (если есть переключатель «Открывать как веб-приложение» — оставь включённым).'];
+ const an=['Открой сайт в <b>Chrome</b>.','Нажми <b>⋮</b> в правом верхнем углу.','Выбери <b>«Установить приложение»</b> или <b>«Добавить на главный экран»</b>.','Подтверди — иконка появится на рабочем столе.'];
+ const pc=['Открой сайт в Chrome или Edge.','Справа в адресной строке нажми значок установки (монитор со стрелкой) или меню ⋮ → «Сохранить и поделиться» → «Установить».'];
+ const ol=a=>`<ol class="clean">${a.map(x=>`<li>${x}</li>`).join('')}</ol>`;
+ if(all)return `<div class="grid g3"><div class="item"><h3>iPhone и iPad</h3>${ol(ios)}</div><div class="item"><h3>Android</h3>${ol(an)}</div><div class="item"><h3>Компьютер</h3>${ol(pc)}</div></div>`;
+ return ol(isIOS()?ios:isAndroid()?an:pc)}
+function installCard(force){if(!force&&(isStandalone()||store.get('hideinstall',false)))return '';
+ return `<section class="card tint install s-start" style="margin:14px 0 6px"><div style="display:flex;flex-wrap:wrap;gap:10px 16px;align-items:flex-start;justify-content:space-between"><div style="flex:1 1 320px"><h2 style="margin:0 0 6px;font-size:1.25rem">Не потеряй путеводитель</h2>
+ <p style="margin:0 0 8px">Добавь сайт на экран «Домой»: он будет открываться как приложение, без адресной строки, и всегда окажется под рукой в день сочинения. Прочитанные страницы открываются даже без интернета.</p>
+ ${force?installSteps(true):`<details><summary style="cursor:pointer;font-weight:700">Как это сделать</summary><div style="margin-top:8px">${installSteps(false)}</div></details>`}</div>
+ <div style="display:flex;gap:8px;flex-wrap:wrap">${force?'':'<button class="btn sm ghost" data-hide-install>Скрыть</button>'}<button class="btn primary sm" data-install ${deferredInstall?'':'hidden'}>Установить</button></div></div></section>`}
+document.addEventListener('click',async e=>{if(e.target.closest('[data-install]')&&deferredInstall){deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null}
+ if(e.target.closest('[data-hide-install]')){store.set('hideinstall',true);e.target.closest('.install').hidden=true}});
+function ustanovka(app){app.dataset.title='Установка на экран «Домой»';app.innerHTML=`<section class="page-head s-start" data-num=""><div class="eyebrow">Приложение</div><h1>Добавить на экран «Домой»</h1><p>Сайт можно установить как приложение: иконка на рабочем столе, запуск в один тап, без адресной строки.</p></section>${installCard(true)}<p class="muted small">Если установить сайт на iPhone, он получит собственное хранилище: черновики, сохранённые в Safari, там не появятся. Войди в аккаунт и в приложении, и черновики подтянутся.</p>`}
+
 /* ===== ГЛАВНАЯ ===== */
 function home(app){const c=countdown();app.dataset.title='Путеводитель';
  const w=D.WORKS.filter(x=>x.full).length, nb=D.WORKS.reduce((a,x)=>a+(x.nb||0)+(x.arg?x.arg.length:0),0);
@@ -101,6 +123,7 @@ function home(app){const c=countdown();app.dataset.title='Путеводител
   <div><div class="date">${c.fmt(c.next.d)}</div><div class="sub">${c.next.t}. Дата считается от сегодняшнего дня.</div></div>
   <div class="bar" aria-hidden="true"><i style="width:${Math.round(c.done*100)}%"></i></div></div>
  </section>
+ ${installCard()}
  <div class="facts"><div class="fact"><b>3:55</b><span>часа на работу</span></div><div class="fact"><b>250+</b><span>слов минимум, лучше 350</span></div><div class="fact"><b>${D.WORKS.length}</b><span>произведений, из них ${w} с полным текстом</span></div><div class="fact"><b>${nb}</b><span>готовых аргументов</span></div></div>
  <div class="toc-title"><h2>Содержание</h2><span class="muted small">Иди по порядку или сразу в нужный раздел</span></div>
  <nav class="toc">${PAGES.map(p=>`<a href="#/${p.id}" class="${p.cls}"><span class="n">${p.n}</span><b>${p.t}</b><span>${p.d}</span><span class="go">${ICON.arrow}</span></a>`).join('')}</nav>`}
@@ -509,13 +532,15 @@ function den(app){const p=PG.den;app.dataset.title=p.t;const items=['Тезис 
  $('#wcT').oninput=e=>{const n=countWords(e.target.value);$('#wcN').innerHTML=`${n} <small>${plural(n,'слово','слова','слов')}${n<250?' — нужно ещё '+(250-n):''}</small>`;$('#wcM').style.width=Math.min(100,n/350*100)+'%'}}
 
 /* ===== ПРОФИЛЬ, РЕГИСТРАЦИЯ (Supabase) ===== */
-let SB=null,USER=null;
-async function sb(){if(SB||!CFG.supabaseUrl||!CFG.supabaseAnonKey)return SB;
- const m=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm');
- SB=m.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey,{auth:{flowType:'pkce',detectSessionInUrl:true,persistSession:true}});
- const {data}=await SB.auth.getSession();USER=data.session?.user||null;
- SB.auth.onAuthStateChange((ev,s)=>{USER=s?.user||null;updUser();if(ev==='SIGNED_IN'&&/[?&]code=/.test(location.search)){history.replaceState(null,'',location.pathname+'#/profil');route()}});
- updUser();return SB}
+let SB=null,USER=null,SBP=null;
+function loadLib(){return window.supabase&&window.supabase.createClient?Promise.resolve():new Promise((res,rej)=>{const s=document.createElement('script');s.src='assets/supabase.js';s.onload=res;s.onerror=()=>rej(new Error('lib'));document.head.appendChild(s)})}
+function sb(){if(!CFG.supabaseUrl||!CFG.supabaseAnonKey)return Promise.resolve(null);if(SBP)return SBP;
+ SBP=(async()=>{await loadLib();
+  SB=window.supabase.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey,{auth:{flowType:'pkce',detectSessionInUrl:true,persistSession:true}});
+  const {data}=await SB.auth.getSession();USER=data.session?.user||null;
+  SB.auth.onAuthStateChange((ev,s)=>{USER=s?.user||null;updUser();if(ev==='SIGNED_IN'&&/[?&]code=/.test(location.search)){history.replaceState(null,'',location.pathname+'#/profil');route()}});
+  updUser();return SB})();
+ SBP.catch(()=>{SBP=null});return SBP}
 function updUser(){const b=$('#userBtn');b.title=USER?'Профиль: '+USER.email:'Профиль';b.style.background=USER?'var(--args-t)':''}
 let tracked=new Set();async function track(page){try{const c=await sb();if(!c||tracked.has(page))return;tracked.add(page);await c.rpc('track_visit',{p_page:page})}catch(e){}}
 async function saveDraft(B){const d={id:B.id||('d'+Date.now()),topic:B.topic||'Без темы',text:B.text,state:B,updated:new Date().toISOString()};B.id=d.id;
@@ -536,15 +561,27 @@ function profil(app){app.dataset.title='Профиль';
  pa.innerHTML='<div class="card"><p class="muted">Подключаюсь…</p></div>';
  sb().then(async c=>{let count='';try{const {data}=await c.rpc('users_count');if(data!=null)count=`<p class="small muted">С путеводителем уже ${data} ${plural(data,'человек','человека','человек')}.</p>`}catch(e){}
   if(USER){pa.innerHTML=`<div class="card login-box"><h2 style="margin-top:0">Вход выполнен</h2><p><b>${esc(USER.email)}</b></p>${count}<button class="btn" id="lo">Выйти</button></div>`;$('#lo').onclick=async()=>{await c.auth.signOut();profil(app)};return}
-  pa.innerHTML=`<div class="card login-box"><h2 style="margin-top:0">Вход по почте</h2><p class="small">Пароль не нужен: пришлём на почту ссылку для входа. Мы не видим, что ты делаешь на сайте, — только сам факт регистрации.</p>${count}
-  <form id="lf"><div class="field"><label for="le">Почта</label><input id="le" type="email" required placeholder="name@mail.ru" autocomplete="email"></div><button class="btn primary" type="submit">Получить ссылку</button></form><p class="small" id="lm" style="margin-top:10px"></p></div>`;
-  $('#lf').onsubmit=async e=>{e.preventDefault();const em=$('#le').value.trim();$('#lm').innerHTML='<span class="spin"></span> Отправляю…';
-   const {error}=await c.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin+location.pathname}});
-   $('#lm').textContent=error?'Ошибка: '+error.message:'Готово! Открой письмо и нажми на ссылку — вернёшься сюда, и вход будет выполнен.'}})
+  const errRu=er=>/rate limit|too many|429|after \d+ seconds/i.test((er.message||'')+(er.status||''))?'Слишком много запросов. Подожди минуту (а если уже было несколько попыток — до часа) и попробуй снова.':/invalid|expired|token/i.test(er.message||'')?'Код не подошёл или устарел. Проверь цифры или запроси новый.':'Ошибка: '+er.message;
+  const stepEmail=(em0='')=>{pa.innerHTML=`<div class="card login-box"><h2 style="margin-top:0">Вход по почте</h2><p class="small">Пароль не нужен: пришлём на почту код (и ссылку) для входа. Мы не видим, что ты делаешь на сайте, — только сам факт регистрации.</p>${count}
+  <form id="lf"><div class="field"><label for="le">Почта</label><input id="le" type="email" required placeholder="name@gmail.com" autocomplete="email" value="${esc(em0)}"></div><button class="btn primary" type="submit">Получить код</button></form><p class="small" id="lm" style="margin-top:10px"></p></div>`;
+   $('#lf').onsubmit=async e=>{e.preventDefault();const em=$('#le').value.trim();$('#lm').innerHTML='<span class="spin"></span> Отправляю…';
+    const {error}=await c.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin+location.pathname}});
+    if(error){$('#lm').textContent=errRu(error);return}stepCode(em)}};
+  const stepCode=em=>{pa.innerHTML=`<div class="card login-box"><h2 style="margin-top:0">Введи код из письма</h2><p class="small">Мы отправили письмо на <b>${esc(em)}</b>. Открой его и введи код. Если пришла только ссылка — просто нажми на неё. Письмо может идти до пары минут; загляни в «Спам» и «Промоакции».</p>
+  <form id="cf"><div class="field"><label for="cc">Код из письма</label><input id="cc" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required placeholder="123456" style="letter-spacing:.2em;font-size:20px"></div><button class="btn primary" type="submit">Войти</button></form><p class="small" id="cm" style="margin-top:10px"></p>
+  <p class="small"><button class="btn sm ghost" id="cr" disabled>Отправить ещё раз</button> <button class="btn sm ghost" id="cb">Другая почта</button></p></div>`;
+   let left=60;const cr=$('#cr');const tick=()=>{if(!cr.isConnected)return;cr.textContent=left>0?`Отправить ещё раз (${left})`:'Отправить ещё раз';cr.disabled=left>0;if(left-->0)setTimeout(tick,1000)};tick();
+   $('#cb').onclick=()=>stepEmail(em);
+   cr.onclick=async()=>{cr.disabled=true;left=60;tick();$('#cm').innerHTML='<span class="spin"></span> Отправляю…';const {error}=await c.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin+location.pathname}});$('#cm').textContent=error?errRu(error):'Отправили ещё раз.'};
+   $('#cf').onsubmit=async e=>{e.preventDefault();const t=$('#cc').value.replace(/\s/g,'');$('#cm').innerHTML='<span class="spin"></span> Проверяю…';
+    const {error}=await c.auth.verifyOtp({email:em,token:t,type:'email'});
+    if(error){$('#cm').textContent=errRu(error);return}USER=(await c.auth.getUser()).data.user;updUser();profil(app)}};
+  stepEmail()})
  .catch(()=>pa.innerHTML='<div class="card"><p>Не удалось подключиться к серверу входа. Черновики всё равно сохраняются в браузере.</p></div>')}
 
 /* ===== подвал и запуск ===== */
-$('#footer').innerHTML=`<p style="margin:0 0 6px"><b>Путеводитель по итоговому сочинению</b> — бесплатный проект для подготовки.</p><p style="margin:0">Материалы: «Всё об итоговом сочинении» и идеальные сочинения (Вера Флекс, ЕГЭFLEX), «Темы и тезисы» (ОК ЕГЭ: К. Кафтаева, О. Беляева), клише (@asyarusichka_el), аргументы VOSH.NETWORK, сборник «Все аргументы по разделу „Духовно-нравственные ориентиры“», сборник аргументов 2021/22. Тексты классики — ilibrary.ru (общественное достояние).</p>`;
+$('#footer').innerHTML=`<p style="margin:0 0 6px"><b>Путеводитель по итоговому сочинению</b> — бесплатный проект для подготовки.</p><p style="margin:0">Материалы: «Всё об итоговом сочинении» и идеальные сочинения (Вера Флекс, ЕГЭFLEX), «Темы и тезисы» (ОК ЕГЭ: К. Кафтаева, О. Беляева), клише (@asyarusichka_el), аргументы VOSH.NETWORK, сборник «Все аргументы по разделу „Духовно-нравственные ориентиры“», сборник аргументов 2021/22. Тексты классики — ilibrary.ru (общественное достояние).</p><p style="margin:8px 0 0"><a href="#/ustanovka">Как добавить сайт на экран «Домой»</a></p>`;
 if(CFG.supabaseUrl)sb().catch(()=>{});
+if('serviceWorker' in navigator&&window.isSecureContext)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 route();
 })();
