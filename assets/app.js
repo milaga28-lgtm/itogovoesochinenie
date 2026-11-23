@@ -38,15 +38,20 @@ const W={};D.WORKS.forEach(w=>W[w.id]=w);
 
 /* ===== даты экзамена: считаются от сегодняшнего дня ===== */
 function nthWeekday(y,m,wd,n){const d=new Date(y,m,1);const shift=(wd-d.getDay()+7)%7;return new Date(y,m,1+shift+7*(n-1))}
+function firstWorkingWed(y,m){let d=nthWeekday(y,m,3,1);while(m===4&&(d.getDate()===1||d.getDate()===9))d=new Date(y,m,d.getDate()+7);return d}
 function examDates(now){const y=now.getFullYear();const list=[];
- for(const yy of [y-1,y,y+1]){list.push({d:nthWeekday(yy,11,3,1),k:'main',t:'основной срок — первая среда декабря'});list.push({d:nthWeekday(yy,1,3,1),k:'extra',t:'дополнительный срок — первая среда февраля'});list.push({d:nthWeekday(yy,3,3,2),k:'extra',t:'дополнительный срок — вторая среда апреля'})}
+ for(const yy of [y-1,y,y+1]){list.push({d:nthWeekday(yy,11,3,1),k:'main',t:'основной срок — первая среда декабря'});list.push({d:nthWeekday(yy,1,3,1),k:'extra',t:'дополнительный срок — первая среда февраля'});list.push({d:firstWorkingWed(yy,4),k:'extra',t:'дополнительный срок — первая рабочая среда мая'})}
  return list.sort((a,b)=>a.d-b.d)}
+/* Отсчёт всегда идёт до ближайшего ОСНОВНОГО срока: после первой среды декабря он сам переключается на декабрь следующего года.
+   Ближайшая пересдача (февраль, май) показывается отдельной строкой. */
 function countdown(){const now=new Date();const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
- const L=examDates(now);const next=L.find(x=>x.d>=today);const days=Math.round((next.d-today)/864e5);
- const prevMain=L.filter(x=>x.k==='main'&&x.d<today).pop();const nextMain=L.find(x=>x.k==='main'&&x.d>=today);
+ const L=examDates(now);const nextMain=L.find(x=>x.k==='main'&&x.d>=today);const days=Math.round((nextMain.d-today)/864e5);
+ const extra=L.find(x=>x.k==='extra'&&x.d>=today&&x.d<nextMain.d);
+ const prevMain=L.filter(x=>x.k==='main'&&x.d<today).pop();
  const total=(nextMain.d-(prevMain?prevMain.d:new Date(nextMain.d-365*864e5)))/864e5;const done=Math.max(0,Math.min(1,1-((nextMain.d-today)/864e5)/total));
  const fmt=d=>d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',weekday:'long'});
- return {days,next,fmt,done,nextMain}}
+ const fmtS=d=>d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',weekday:'long'});
+ return {days,next:nextMain,fmt,fmtS,done,nextMain,extra,extraDays:extra?Math.round((extra.d-today)/864e5):null}}
 
 /* ===== счётчик слов по правилам итогового ===== */
 function countWords(t){if(!t)return 0;t=t.replace(/<[^>]+>/g,' ');
@@ -122,9 +127,9 @@ function home(app){const c=countdown();app.dataset.title='Путеводител
  <div class="hero-main"><h1>Путеводитель по <em>итоговому</em> сочинению</h1>
   <p>Всё в одном месте: критерии, клише, идеальные сочинения, темы с тезисами, аргументы по подразделам, тексты произведений и конструктор, который соберёт черновик под твою тему.</p>
   <div class="hero-actions"><a class="btn primary s-krit" href="#/kriterii">Начать с критериев ${ICON.arrow}</a><a class="btn s-build" href="#/konstruktor">Открыть конструктор</a></div></div>
- <div class="count"><div><div class="lbl">${c.days===0?'Сегодня':'До сочинения'}</div>
+ <div class="count"><div><div class="lbl">${c.days===0?'Сегодня':c.days>200?'До следующего сочинения':'До сочинения'}</div>
   <div class="big">${c.days===0?'день X':c.days}${c.days===0?'':`<small>${word}</small>`}</div></div>
-  <div><div class="date">${c.fmt(c.next.d)}</div><div class="sub">${c.next.t}. Дата считается от сегодняшнего дня.</div></div>
+  <div><div class="date">${c.fmt(c.next.d)}</div><div class="sub">${c.next.t}.${c.extra?` Ближайшая пересдача — ${c.fmtS(c.extra.d)}${c.extraDays===0?' (сегодня)':`, через ${c.extraDays} ${plural(c.extraDays,'день','дня','дней')}`}.`:''} Даты считаются по правилу — точную дату уточняй в школе.</div></div>
   <div class="bar" aria-hidden="true"><i style="width:${Math.round(c.done*100)}%"></i></div></div>
  </section>
  ${installCard()}
@@ -143,7 +148,7 @@ function kriterii(app){const p=PG.kriterii;app.dataset.title=p.t;
  <div class="card"><h2>Что это и зачем</h2>
   <p>Итоговое сочинение — <b>допуск к ЕГЭ</b>. Оценка: «зачёт» или «незачёт». Проводится в <b>первую среду декабря</b>, на работу дают <b>3 часа 55 минут</b>.</p>
   <p>Темы берутся из закрытого банка (около 2000 тем). В комплекте 6 тем: темы 1–2 — раздел 1, темы 3–4 — раздел 2, темы 5–6 — раздел 3. Выбираешь одну.</p>
-  <p class="muted">Можно пользоваться орфографическим словарём, который выдают в аудитории. Если «незачёт» или не пришёл по уважительной причине — можно пересдать в дополнительные сроки: первая среда февраля и вторая среда апреля.</p></div>
+  <p class="muted">Можно пользоваться орфографическим словарём, который выдают в аудитории. Если «незачёт» или не пришёл по уважительной причине — можно пересдать в дополнительные сроки: первая среда февраля и первая рабочая среда мая. Точные даты каждый год объявляют официально — уточняй у учителя или на сайте ФИПИ.</p></div>
  <h2>Два требования — без них сочинение даже не проверят</h2>
  <div class="grid g2">
   <div class="card tint"><h3>Требование 1. Объём</h3><p>Меньше <b>250 слов</b> — сразу «незачёт» по всей работе. Верхней границы нет, рекомендуют <b>от 350 слов</b>.</p></div>
